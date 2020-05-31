@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-http-switch-unchained",
+  "name": "homebridge-http-switch-unlimited",
   "version": "1.0.1",
-  "description": "Unrestricted version of the powerful http switch for Homebridge",
+  "description": "Unlimited version of the powerful http switch for Homebridge",
   "license": "ISC",
   "keywords": [
     "homebridge",
@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/downloard/homebridge-http-switch-unchained"
+    "url": "https://github.com/downloard/homebridge-http-switch-unlimited"
   },
   "bugs": {
-    "url": "https://github.com/downloard/homebridge-http-switch-unchained/issues"
+    "url": "https://github.com/downloard/homebridge-http-switch-unlimited/issues"
   },
   "engines": {
     "node": ">=10.17.0",

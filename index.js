@@ -19,7 +19,7 @@ module.exports = function (homebridge) {
 
     api = homebridge;
 
-    homebridge.registerAccessory("homebridge-http-switch-unchained", "HTTP-SWITCH-UNCHAINED", HTTP_SWITCH);
+    homebridge.registerAccessory("homebridge-http-switch-unlimited", "HTTP-SWITCH-UNLIMITED", HTTP_SWITCH);
 };
 
 const SwitchType = Object.freeze({

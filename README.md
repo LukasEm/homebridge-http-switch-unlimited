@@ -1,4 +1,4 @@
-# What does 'unchained' mean?
+# What does 'unlimited' mean?
 
 [homebridge-http-switch](https://github.com/Supereg/homebridge-http-switch) is a great plugin. Thanks for that. But sometimes you need some special behavior. For me it was my DAB radio which requires 3 URL request for simple channel selection. But this was not supported out of the box. I understand the fail-safe attitude of the original plungin and was discussed within [an issue](https://github.com/Supereg/homebridge-http-switch/issues/53).
 
@@ -8,7 +8,7 @@ Finally this fork support the following Stateless switch configuration:
 {
     "accessories": [
         {
-            "accessory": "HTTP-SWITCH-UNCHAINED",
+            "accessory": "HTTP-SWITCH-UNLIMITED",
             "name": "Radio Station 3",
             "switchType": "stateful",
             "multipleUrlExecutionStrategy": "series",
