@@ -19,7 +19,7 @@ module.exports = function (homebridge) {
 
     api = homebridge;
 
-    homebridge.registerAccessory("homebridge-http-switch", "HTTP-SWITCH", HTTP_SWITCH);
+    homebridge.registerAccessory("homebridge-http-switch-unchained", "HTTP-SWITCH-UNCHAINED", HTTP_SWITCH);
 };
 
 const SwitchType = Object.freeze({
@@ -193,10 +193,10 @@ function HTTP_SWITCH(log, config) {
         if (this.auth)
             this.log("  - auth options: " + JSON.stringify(this.auth));
 
-        if (this.on)
-            this.log("  - onUrls: " + JSON.stringify(this.on));
-        if (this.off)
-            this.log("  - offUrls: " + JSON.stringify(this.off));
+        this.log("  - onUrls: " + JSON.stringify(this.on));
+        
+        this.log("  - offUrls: " + JSON.stringify(this.off));
+        
         if (this.status)
             this.log("  - statusUrl: " + JSON.stringify(this.status));
 
@@ -231,9 +231,7 @@ HTTP_SWITCH.prototype = {
         if (this.switchType !== SwitchType.STATELESS_REVERSE) {
             if (config.onUrl) {
                 try {
-                    this.on = this.switchType === SwitchType.STATEFUL
-                        ? [configParser.parseUrlProperty(config.onUrl)]
-                        : configParser.parseMultipleUrlProperty(config.onUrl);
+                    this.on = configParser.parseMultipleUrlProperty(config.onUrl);
                 } catch (error) {
                     this.log.warn("Error occurred while parsing 'onUrl': " + error.message);
                     return false;
@@ -251,17 +249,14 @@ HTTP_SWITCH.prototype = {
         if (this.switchType !== SwitchType.STATELESS) {
             if (config.offUrl) {
                 try {
-                    this.off = this.switchType === SwitchType.STATEFUL
-                        ? [configParser.parseUrlProperty(config.offUrl)]
-                        : configParser.parseMultipleUrlProperty(config.offUrl);
+                    this.off = configParser.parseMultipleUrlProperty(config.offUrl);
                 } catch (error) {
                     this.log.warn("Error occurred while parsing 'offUrl': " + error.message);
                     return false;
                 }
             }
             else {
-                this.log.warn(`Property 'offUrl' is required when using switchType '${this.switchType}'`);
-                return false;
+                this.log.warn(`Property 'offUrl' is recommanded when using switchType '${this.switchType}'`);
             }
         }
         else if (config.offUrl)
@@ -300,9 +295,9 @@ HTTP_SWITCH.prototype = {
         const informationService = new Service.AccessoryInformation();
 
         informationService
-            .setCharacteristic(Characteristic.Manufacturer, "Andreas Bauer")
-            .setCharacteristic(Characteristic.Model, "HTTP Switch")
-            .setCharacteristic(Characteristic.SerialNumber, "SW01")
+            .setCharacteristic(Characteristic.Manufacturer, "Hatsch Fob")
+            .setCharacteristic(Characteristic.Model, "HTTP Switch Free")
+            .setCharacteristic(Characteristic.SerialNumber, "FOB01")
             .setCharacteristic(Characteristic.FirmwareRevision, packageJSON.version);
 
         return [informationService, this.homebridgeService];
@@ -397,6 +392,10 @@ HTTP_SWITCH.prototype = {
 
         switch (this.switchType) {
             case SwitchType.STATEFUL:
+                if (!on) {                    
+                    callback();
+                    break;
+                }
                 this._makeSetRequest(on, callback);
                 break;
             case SwitchType.STATELESS:

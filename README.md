@@ -1,3 +1,34 @@
+# What does 'unchained' mean?
+
+[homebridge-http-switch](https://github.com/Supereg/homebridge-http-switch) is a great plugin. Thanks for that. But sometimes you need some special behavior. For me it was my DAB radio which requires 3 URL request for simple channel selection. But this was not supported out of the box. I understand the fail-safe attitude of the original plungin and was discussed within [an issue](https://github.com/Supereg/homebridge-http-switch/issues/53).
+
+Finally this fork support the following Stateless switch configuration: 
+
+```json
+{
+    "accessories": [
+        {
+            "accessory": "HTTP-SWITCH-UNCHAINED",
+            "name": "Radio Station 3",
+            "switchType": "stateful",
+            "multipleUrlExecutionStrategy": "series",
+            "onUrl": [
+                "http://192.168.1.100/fsapi/SET/netRemote.nav.state?pin=1234&value=1",
+                "delay(500)",
+                "http://192.168.1.100/fsapi/SET/netRemote.nav.action.selectPreset?pin=1234&value=3",
+                "delay(500)",
+                "http://192.168.1.100/fsapi/SET/netRemote.nav.state?pin=1234&value=0"
+            ],
+            "statusUrl": "http://192.168.1.100/fsapi/GET/netRemote.play.info.name",
+            "statusPattern": ".*Radio Station 3*"
+        }
+    ]
+}
+```
+
+Below is the unchanged origin README.
+
+
 # homebridge-http-switch Plugin
 
 [![npm](https://img.shields.io/npm/v/homebridge-http-switch?style=for-the-badge)](https://www.npmjs.com/package/homebridge-http-switch)
