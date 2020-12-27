@@ -19,7 +19,7 @@ module.exports = function (homebridge) {
 
     api = homebridge;
 
-    homebridge.registerAccessory("homebridge-http-switch-pro", "HTTP-SWITCH-PRO", HTTP_SWITCH);
+    homebridge.registerAccessory("homebridge-http-switch-unlimited", "HTTP-SWITCH-UNLIMITED", HTTP_SWITCH);
 };
 
 const SwitchType = Object.freeze({
@@ -295,9 +295,9 @@ HTTP_SWITCH.prototype = {
         const informationService = new Service.AccessoryInformation();
 
         informationService
-            .setCharacteristic(Characteristic.Manufacturer, "LukasEm")
-            .setCharacteristic(Characteristic.Model, "HTTP Switch Pro")
-            .setCharacteristic(Characteristic.SerialNumber, "1331")
+            .setCharacteristic(Characteristic.Manufacturer, "Hatsch Fob")
+            .setCharacteristic(Characteristic.Model, "HTTP Switch Free")
+            .setCharacteristic(Characteristic.SerialNumber, "FOB01")
             .setCharacteristic(Characteristic.FirmwareRevision, packageJSON.version);
 
         return [informationService, this.homebridgeService];
@@ -392,14 +392,12 @@ HTTP_SWITCH.prototype = {
 
         switch (this.switchType) {
             case SwitchType.STATEFUL:
-		this._makeSetRequest(on, callback);
-                break;
-                /*if (!on) {                    
+                if (!on) {                    
                     callback();
                     break;
                 }
                 this._makeSetRequest(on, callback);
-                break;*/
+                break;
             case SwitchType.STATELESS:
                 if (!on) {
                     callback();

@@ -1,64 +1,27 @@
-# What does 'pro' mean?
+# What does 'unlimited' mean?
 
-[homebridge-http-switch](https://github.com/Supereg/homebridge-http-switch) is basis for http-switch-pro. Even more I used forked version 'unlimited'. But that version has limitation as well. Yes, you can define stateful switch with multiple HTTP requests but you can't operate off switch (offUrl).
+[homebridge-http-switch](https://github.com/Supereg/homebridge-http-switch) is a great plugin. Thanks for that. But sometimes you need some special behavior. For me it was my DAB radio which requires 3 URL request for simple channel selection. But this was not supported out of the box. I understand the fail-safe attitude of the original plungin and was discussed within [an issue](https://github.com/Supereg/homebridge-http-switch/issues/53).
 
-'PRO' version is stateful switch with option to define multiple requests for onUrl AND offUrl working together with statusUrl. Ignoring the fail-safe attitude of the original plugin discussed in [issue](https://github.com/Supereg/homebridge-http-switch/issues/53). PRO version keeps all functionalities of basic http-switch removing stateful type limitation.
-
-I used it to make a light switch for Philips TV ambilight since for 2018 version (and probably others) there is no direct endpoint to turn off ambilight and other issues.
-
-Example of stateful switch configuration with multiple requests with delay for Philips TV (with jointSpace): 
+Finally this fork support the following Stateless switch configuration: 
 
 ```json
 {
     "accessories": [
         {
-            "accessory": "HTTP-SWITCH-PRO",
-            "name": "Ambilight TV",
+            "accessory": "HTTP-SWITCH-UNLIMITED",
+            "name": "Radio Station 3",
             "switchType": "stateful",
             "multipleUrlExecutionStrategy": "series",
-            "onUrl":
-	            [ 
-                    {
-                        "url": "http://192.168.1.100:1925/6/input/key",
-                        "method": "POST",
-                        "body": {"key":"AmbilightOnOff"}
-                    },
-                    "delay(2000)",
-                    {
-                        "url": "http://192.168.1.100:1925/6/input/key",
-                        "method": "POST",
-                        "body": {"key":"CursorDown"}
-                    },
-                    "delay(1000)",
-                    {
-                        "url": "http://192.168.1.100:1925/6/input/key",
-                        "method": "POST",
-                        "body": {"key":"AmbilightOnOff"}
-                    }
-	            ],
-	        "offUrl":
-                [ 
-                    {
-                        "url": "http://192.168.1.100:1925/6/input/key",
-                        "method": "POST",
-                        "body": {"key":"AmbilightOnOff"}
-                    },
-                    "delay(2000)",
-                    {
-                        "url": "http://192.168.1.100:1925/6/input/key",
-                        "method": "POST",
-                        "body": {"key":"CursorUp"}
-                    },
-                    "delay(1000)",
-                    {
-                        "url": "http://192.168.1.100:1925/6/input/key",
-                        "method": "POST",
-                        "body": {"key":"AmbilightOnOff"}
-                    }
-                ],
-          "statusUrl": "http://192.168.1.100:1925/6/ambilight/power",
-          "statusPattern": "\"power\": \"On\"
-        }   
+            "onUrl": [
+                "http://192.168.1.100/fsapi/SET/netRemote.nav.state?pin=1234&value=1",
+                "delay(500)",
+                "http://192.168.1.100/fsapi/SET/netRemote.nav.action.selectPreset?pin=1234&value=3",
+                "delay(500)",
+                "http://192.168.1.100/fsapi/SET/netRemote.nav.state?pin=1234&value=0"
+            ],
+            "statusUrl": "http://192.168.1.100/fsapi/GET/netRemote.play.info.name",
+            "statusPattern": ".*Radio Station 3*"
+        }
     ]
 }
 ```
