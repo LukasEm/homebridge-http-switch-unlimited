@@ -345,8 +345,10 @@ HTTP_SWITCH.prototype = {
 
                 http.httpRequest(this.status, (error, response, body) => {
                     if (error) {
+                    	const value = this.homebridgeService.getCharacteristic(Characteristic.On).value;
                         this.log("getStatus() failed: %s", error.message);
-                        callback(error);
+			callback(null, value);
+                        //callback(error);
                     }
                     else if (!(http.isHttpSuccessCode(response.statusCode) || http.isHttpRedirectCode(response.statusCode))) {
                         this.log("getStatus() http request returned http error code: %s", response.statusCode);
